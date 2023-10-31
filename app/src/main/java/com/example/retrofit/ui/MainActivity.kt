@@ -88,10 +88,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showProductData() {
-
-
-
-        progressBar.visibility = View.VISIBLE
+      progressBar.visibility = View.VISIBLE
         errorMsg.text = ""
         CoroutineScope(Dispatchers.IO).launch {
             val product = repositoryProduct.getProductById(5)
