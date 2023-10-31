@@ -1,26 +1,34 @@
 package com.example.retrofit.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.retrofit.R
 import com.example.retrofit.data.PhotoData
 import com.example.retrofit.data.UserData
+import com.example.retrofit.ui.wifi.WiFiManager
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private lateinit var viewModel: MainViewModel
+
+    @Inject
+    lateinit var wiFiManager: WiFiManager
+
+    private val viewModel: MainViewModel by viewModels()
     private val compositeDisposable = CompositeDisposable()
 
     private lateinit var progressBar: ProgressBar
@@ -31,6 +39,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        wiFiManager.connect()
+
         progressBar = findViewById<ProgressBar>(R.id.progressBar)
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         errorMsg = findViewById<TextView>(R.id.errorMsg)
@@ -40,13 +50,12 @@ class MainActivity : AppCompatActivity() {
        // val repo = Repository(JsonPlaceHolderSingleton.api)
        // val vmFactory = MainViewModelFactory(repo)
        // viewModel = ViewModelProviders.of(this, vmFactory).get(MainViewModel::class.java)
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        //viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         clickButton()
 
-
-
     }
+
 
     private fun clickButton() {
         val buttonShowUserData = findViewById<Button>(R.id.show_users)
