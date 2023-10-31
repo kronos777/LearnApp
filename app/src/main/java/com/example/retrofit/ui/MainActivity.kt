@@ -27,6 +27,8 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import java.lang.Thread.sleep
 import javax.inject.Inject
 import kotlin.math.log
@@ -86,6 +88,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showProductData() {
+
+
+
         progressBar.visibility = View.VISIBLE
         errorMsg.text = ""
         CoroutineScope(Dispatchers.IO).launch {
