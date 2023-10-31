@@ -6,13 +6,17 @@ import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.retrofit.R
-import com.example.retrofit.data.PhotoData
-import com.example.retrofit.data.UserData
+import com.example.retrofit.data.news.PhotoData
+import com.example.retrofit.data.news.UserData
+import com.example.retrofit.data.product.Product
+import com.example.retrofit.data.product.ProductApi
+import com.example.retrofit.data.product.RepositoryProduct
 import com.example.retrofit.ui.wifi.WiFiManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -20,13 +24,22 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.Thread.sleep
 import javax.inject.Inject
+import kotlin.math.log
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var wiFiManager: WiFiManager
+
+
+    @Inject
+    lateinit var repositoryProduct: RepositoryProduct
 
     private val viewModel: MainViewModel by viewModels()
     private val compositeDisposable = CompositeDisposable()
@@ -60,12 +73,32 @@ class MainActivity : AppCompatActivity() {
     private fun clickButton() {
         val buttonShowUserData = findViewById<Button>(R.id.show_users)
         val buttonShowPhotoData = findViewById<Button>(R.id.show_photo)
+        val buttonShowProductData = findViewById<Button>(R.id.show_product)
+        buttonShowProductData.setOnClickListener {
+            showProductData()
+        }
         buttonShowUserData.setOnClickListener {
             showUserData()
         }
         buttonShowPhotoData.setOnClickListener {
             showPhotoData()
         }
+    }
+
+    private fun showProductData() {
+        progressBar.visibility = View.VISIBLE
+        errorMsg.text = ""
+        CoroutineScope(Dispatchers.IO).launch {
+            val product = repositoryProduct.getProductById(5)
+            runOnUiThread {
+                title = product.title
+                errorMsg.visibility = View.VISIBLE
+                progressBar.visibility = View.INVISIBLE
+                errorMsg.text = product.title
+            }
+        }
+        //sleep(5000)
+       // Log.d("thisProduct", "title.toString()")
     }
 
 

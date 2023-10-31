@@ -50,6 +50,16 @@
 
 
     <Button
+        android:id="@+id/show_product"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="show product"
+        app:layout_constraintBottom_toTopOf="@id/show_photo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <Button
         android:id="@+id/show_photo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

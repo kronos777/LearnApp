@@ -1,8 +1,11 @@
 package com.example.retrofit.di
 
-import com.example.retrofit.data.JsonPlaceHolderApi
-import com.example.retrofit.data.JsonPlaceHolderSingleton
-import com.example.retrofit.data.Repository
+import com.example.retrofit.data.news.JsonPlaceHolderApi
+import com.example.retrofit.data.news.JsonPlaceHolderSingleton
+import com.example.retrofit.data.news.Repository
+import com.example.retrofit.data.product.JsonPlaceHolderProduct
+import com.example.retrofit.data.product.ProductApi
+import com.example.retrofit.data.product.RepositoryProduct
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,4 +27,18 @@ object MainModule {
     fun provideJsonPlaceHolderApi(): JsonPlaceHolderApi {
         return JsonPlaceHolderSingleton.api
     }
+
+    @Provides
+    @Singleton
+    fun provideRepositoryProduct(api: ProductApi): RepositoryProduct {
+        return RepositoryProduct(api)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideJsonPlaceHolderProductApi(): ProductApi {
+        return JsonPlaceHolderProduct.api
+    }
+
 }

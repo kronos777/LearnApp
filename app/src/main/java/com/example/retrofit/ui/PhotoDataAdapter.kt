@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.retrofit.R
-import com.example.retrofit.data.PhotoData
+import com.example.retrofit.data.news.PhotoData
 
 class PhotoDataAdapter(private val photoData: List<PhotoData>) :
     RecyclerView.Adapter<PhotoDataAdapter.MyViewHolder>() {

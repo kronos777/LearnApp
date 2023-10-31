@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.retrofit.R
-import com.example.retrofit.data.UserData
+import com.example.retrofit.data.news.UserData
 
 class UserDataAdapter(private val userData: List<UserData>) :
     RecyclerView.Adapter<UserDataAdapter.MyViewHolder>() {

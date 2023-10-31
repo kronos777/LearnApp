@@ -1,9 +1,7 @@
 package com.example.retrofit.ui
 
 import androidx.lifecycle.ViewModel
-import com.example.retrofit.data.JsonPlaceHolderSingleton
-import com.example.retrofit.data.Repository
-import dagger.Provides
+import com.example.retrofit.data.news.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
