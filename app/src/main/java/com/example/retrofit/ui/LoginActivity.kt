@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,8 +32,6 @@ class LoginActivity : AppCompatActivity() {
 
         val button = binding.button
         button.setOnClickListener {
-            //val intent = Intent(this, MainActivity::class.java)
-            //startActivity(intent)
             auth()
         }
     }
@@ -50,9 +49,15 @@ class LoginActivity : AppCompatActivity() {
                 binding.firstName.text = user.firstName
                 binding.lastName.text = user.lastName
             }
+            delay(5000)
+            goMain()
         }
 
     }
 
+    private fun goMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+    }
 
 }

@@ -77,13 +77,29 @@ class MainActivity : AppCompatActivity() {
         val buttonShowPhotoData = findViewById<Button>(R.id.show_photo)
         val buttonShowProductData = findViewById<Button>(R.id.show_product)
         buttonShowProductData.setOnClickListener {
-            showProductData()
+            //showProductData()
+            showProductsData()
         }
         buttonShowUserData.setOnClickListener {
             showUserData()
         }
         buttonShowPhotoData.setOnClickListener {
             showPhotoData()
+        }
+    }
+
+
+    private fun showProductsData() {
+        progressBar.visibility = View.GONE
+        CoroutineScope(Dispatchers.IO).launch {
+            val products = repositoryProduct.getAllProducts()
+            runOnUiThread {
+                onlyShowRecyclerView()
+                val adapter = ProductAdapter()
+                recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+                recyclerView.adapter = adapter
+                adapter.submitList(products.products)
+            }
         }
     }
 
@@ -179,5 +195,10 @@ class MainActivity : AppCompatActivity() {
             adapter = PhotoDataAdapter(photoDataList)
         }
     }
+
+    private fun initRecyclerAllProducts(productsList: List<Product>) {
+
+    }
+
 
 }

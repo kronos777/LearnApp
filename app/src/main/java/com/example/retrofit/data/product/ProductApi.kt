@@ -15,4 +15,9 @@ interface ProductApi {
    @POST("auth/login")
    suspend fun auth(@Body authRequest: AuthRequest): User
 
+
+   @GET("products")
+   suspend fun getAllProducts(): Products
+
+
 }

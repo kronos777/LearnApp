@@ -7,5 +7,6 @@ class RepositoryProduct(val api: ProductApi) {
 
     suspend fun getProductById(id: Int) = api.getProductById(id)
     suspend fun auth(authRequest: AuthRequest) = api.auth(authRequest)
+    suspend fun getAllProducts() = api.getAllProducts()
 
 }
