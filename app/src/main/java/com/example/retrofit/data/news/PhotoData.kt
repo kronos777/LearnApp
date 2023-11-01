@@ -1,4 +1,4 @@
-package com.example.retrofit.data
+package com.example.retrofit.data.news
 
 data class PhotoData(
     val albumId: Int,

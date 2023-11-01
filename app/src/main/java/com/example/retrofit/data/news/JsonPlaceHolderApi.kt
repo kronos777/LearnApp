@@ -1,4 +1,4 @@
-package com.example.retrofit.data
+package com.example.retrofit.data.news
 
 import io.reactivex.Single
 import retrofit2.http.GET
