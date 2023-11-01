@@ -3,6 +3,7 @@ package com.example.retrofit.ui
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.retrofit.R
 import com.example.retrofit.data.product.RepositoryProduct
@@ -25,6 +26,8 @@ class LoginActivity : AppCompatActivity() {
 
     @Inject
     lateinit var repositoryProduct: RepositoryProduct
+
+    private val viewModelProduct: ProductViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,14 +53,20 @@ class LoginActivity : AppCompatActivity() {
                 Picasso.get().load(user.image).into(binding.iv)
                 binding.firstName.text = user.firstName
                 binding.lastName.text = user.lastName
+               // viewModelProduct.user.value = user
             }
             delay(5000)
-
+            //gmain()
             goMain(user)
+
         }
 
     }
 
+    private fun gmain() {
+        val i = Intent(this, MainActivity::class.java)
+        startActivity(i)
+    }
     private fun goMain(user: User) {
         val intent = Intent(this, MainActivity::class.java)
         var gson = Gson()

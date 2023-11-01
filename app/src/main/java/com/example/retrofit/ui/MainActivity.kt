@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.retrofit.R
@@ -42,6 +43,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var repositoryProduct: RepositoryProduct
 
     private val viewModel: MainViewModel by viewModels()
+    private val viewModelProduct: ProductViewModel by viewModels()
+
+
     private val compositeDisposable = CompositeDisposable()
 
     private lateinit var progressBar: ProgressBar
@@ -57,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         val dataUserString = arguments?.get("user")
         var gson = Gson()
         user = gson.fromJson(dataUserString.toString(), User::class.java)
-        //Toast.makeText(this, "current user: " + user, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "currentUser" + user, Toast.LENGTH_SHORT).show()
 
         wiFiManager.connect()
 
@@ -71,6 +75,10 @@ class MainActivity : AppCompatActivity() {
        // val vmFactory = MainViewModelFactory(repo)
        // viewModel = ViewModelProviders.of(this, vmFactory).get(MainViewModel::class.java)
         //viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+
+        /*viewModelProduct.user.observe(this) {
+            Log.d("currentUser", it.firstName)
+        }*/
 
         clickButton()
 
