@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.SearchView
+import android.widget.SearchView.OnQueryTextListener
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -76,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         val buttonShowUserData = findViewById<Button>(R.id.show_users)
         val buttonShowPhotoData = findViewById<Button>(R.id.show_photo)
         val buttonShowProductData = findViewById<Button>(R.id.show_product)
+        val searchBar = findViewById<androidx.appcompat.widget.SearchView>(R.id.search_bar)
         buttonShowProductData.setOnClickListener {
             //showProductData()
             showProductsData()
@@ -85,6 +88,39 @@ class MainActivity : AppCompatActivity() {
         }
         buttonShowPhotoData.setOnClickListener {
             showPhotoData()
+        }
+
+        searchBar.setOnQueryTextListener(object : OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(txt: String?): Boolean {
+                showProductsDataByName(txt)
+                return true
+            }
+
+            override fun onQueryTextChange(txt: String?): Boolean {
+              //  showProductsDataByName(txt)
+                return true
+            }
+        })
+
+
+    }
+
+    private fun showProductsDataByName(name: String?) {
+        progressBar.visibility = View.GONE
+        CoroutineScope(Dispatchers.IO).launch {
+            val products = name?.let { repositoryProduct.getProductsByName(it) }
+            runOnUiThread {
+                onlyShowRecyclerView()
+                val adapter = ProductAdapter()
+                recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+                recyclerView.adapter = adapter
+                if (products != null) {
+                    adapter.submitList(products.products)
+                } else {
+                   // Toast.makeText(this, "text query is empty", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
