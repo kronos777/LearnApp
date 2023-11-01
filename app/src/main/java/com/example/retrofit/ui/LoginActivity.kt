@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.retrofit.R
 import com.example.retrofit.data.product.RepositoryProduct
 import com.example.retrofit.data.user.AuthRequest
+import com.example.retrofit.data.user.User
 import com.example.retrofit.databinding.ActivityLogin2Binding
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -50,13 +52,17 @@ class LoginActivity : AppCompatActivity() {
                 binding.lastName.text = user.lastName
             }
             delay(5000)
-            goMain()
+
+            goMain(user)
         }
 
     }
 
-    private fun goMain() {
+    private fun goMain(user: User) {
         val intent = Intent(this, MainActivity::class.java)
+        var gson = Gson()
+        var jsonString = gson.toJson(user)
+        intent.putExtra("user", jsonString)
         startActivity(intent)
     }
 

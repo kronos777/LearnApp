@@ -4,6 +4,8 @@ import com.example.retrofit.data.user.AuthRequest
 import com.example.retrofit.data.user.User
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -21,8 +23,11 @@ interface ProductApi {
    suspend fun getAllProducts(): Products
 
 
-   @GET("products/search")
-   suspend fun getProductsByName(@Query("q") name: String): Products
+   @Headers(
+      "Content-Type: application/json"
+   )
+   @GET("auth/products/search")
+   suspend fun getProductsByName(@Header("Authorization") token: String, @Query("q") name: String): Products
 
 
 }

@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
-import android.widget.SearchView
 import android.widget.SearchView.OnQueryTextListener
 import android.widget.TextView
 import android.widget.Toast
@@ -17,9 +16,10 @@ import com.example.retrofit.R
 import com.example.retrofit.data.news.PhotoData
 import com.example.retrofit.data.news.UserData
 import com.example.retrofit.data.product.Product
-import com.example.retrofit.data.product.ProductApi
 import com.example.retrofit.data.product.RepositoryProduct
+import com.example.retrofit.data.user.User
 import com.example.retrofit.ui.wifi.WiFiManager
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -29,11 +29,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import java.lang.Thread.sleep
 import javax.inject.Inject
-import kotlin.math.log
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -51,10 +47,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
     private lateinit var errorMsg: TextView
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val arguments = intent.extras
+        val dataUserString = arguments?.get("user")
+        var gson = Gson()
+        user = gson.fromJson(dataUserString.toString(), User::class.java)
+        //Toast.makeText(this, "current user: " + user, Toast.LENGTH_SHORT).show()
 
         wiFiManager.connect()
 
@@ -109,7 +112,7 @@ class MainActivity : AppCompatActivity() {
     private fun showProductsDataByName(name: String?) {
         progressBar.visibility = View.GONE
         CoroutineScope(Dispatchers.IO).launch {
-            val products = name?.let { repositoryProduct.getProductsByName(it) }
+            val products = name?.let { repositoryProduct.getProductsByName(user.token, it) }
             runOnUiThread {
                 onlyShowRecyclerView()
                 val adapter = ProductAdapter()

@@ -9,7 +9,7 @@ class RepositoryProduct(val api: ProductApi) {
     suspend fun getProductById(id: Int) = api.getProductById(id)
     suspend fun auth(authRequest: AuthRequest) = api.auth(authRequest)
     suspend fun getAllProducts() = api.getAllProducts()
-    suspend fun getProductsByName(name: String) = api.getProductsByName(name)
+    suspend fun getProductsByName(token: String, name: String) = api.getProductsByName(token, name)
 
 
 }
