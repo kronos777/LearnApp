@@ -6,6 +6,9 @@ import com.example.retrofit.data.news.Repository
 import com.example.retrofit.data.product.JsonPlaceHolderProduct
 import com.example.retrofit.data.product.ProductApi
 import com.example.retrofit.data.product.RepositoryProduct
+import com.example.retrofit.data.weather.JsonPlaceHolderWeather
+import com.example.retrofit.data.weather.RepositoryWeather
+import com.example.retrofit.data.weather.WeatherApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,5 +43,20 @@ object MainModule {
     fun provideJsonPlaceHolderProductApi(): ProductApi {
         return JsonPlaceHolderProduct.api
     }
+
+    @Provides
+    @Singleton
+    fun provideRepositoryWeather(api: WeatherApi): RepositoryWeather {
+        return RepositoryWeather(api)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideJsonPlaceHolderWeatherApi(): WeatherApi {
+        return JsonPlaceHolderWeather.api
+    }
+
+
 
 }

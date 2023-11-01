@@ -19,6 +19,7 @@ import com.example.retrofit.data.news.UserData
 import com.example.retrofit.data.product.Product
 import com.example.retrofit.data.product.RepositoryProduct
 import com.example.retrofit.data.user.User
+import com.example.retrofit.data.weather.RepositoryWeather
 import com.example.retrofit.ui.wifi.WiFiManager
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,6 +42,10 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var repositoryProduct: RepositoryProduct
+
+    @Inject
+    lateinit var repositoryWeather: RepositoryWeather
+
 
     private val viewModel: MainViewModel by viewModels()
     private val viewModelProduct: ProductViewModel by viewModels()
@@ -92,7 +97,8 @@ class MainActivity : AppCompatActivity() {
         val searchBar = findViewById<androidx.appcompat.widget.SearchView>(R.id.search_bar)
         buttonShowProductData.setOnClickListener {
             //showProductData()
-            showProductsData()
+            //showProductsData()
+            showWeatherData()
         }
         buttonShowUserData.setOnClickListener {
             showUserData()
@@ -115,6 +121,24 @@ class MainActivity : AppCompatActivity() {
         })
 
 
+    }
+
+    private fun showWeatherData() {
+        progressBar.visibility = View.GONE
+        errorMsg.visibility = View.VISIBLE
+        CoroutineScope(Dispatchers.IO).launch {
+            val model = repositoryWeather.getDataWeather(
+                "57081927e320458189d164829230111",
+                "Moscow",
+                "3",
+                "no",
+                "no"
+            )
+            runOnUiThread {
+                errorMsg.text = model.location.name.toString()
+                errorMsg.text = model.current.temp_c.toString()
+            }
+        }
     }
 
     private fun showProductsDataByName(name: String?) {
