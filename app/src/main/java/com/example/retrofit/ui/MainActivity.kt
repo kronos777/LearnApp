@@ -31,6 +31,8 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -48,6 +50,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private val viewModel: MainViewModel by viewModels()
+    private val viewModelCrypto: CryptoViewModel by viewModels()
     private val viewModelProduct: ProductViewModel by viewModels()
 
 
@@ -98,7 +101,9 @@ class MainActivity : AppCompatActivity() {
         buttonShowProductData.setOnClickListener {
             //showProductData()
             //showProductsData()
-            showWeatherData()
+            //showWeatherData()
+            testCrypto()
+
         }
         buttonShowUserData.setOnClickListener {
             showUserData()
@@ -122,6 +127,14 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+    fun testCrypto() {
+        CoroutineScope(Dispatchers.IO).launch {
+                viewModelCrypto.getCoinInfo(50).toString()
+                Log.d("cryptoAnsw", viewModelCrypto.coinNamesListDtoLiveData.value.toString())
+            }
+    }
+
 
     private fun showWeatherData() {
         progressBar.visibility = View.GONE

@@ -1,5 +1,8 @@
 package com.example.retrofit.di
 
+import com.example.retrofit.data.crypto.CryptoApi
+import com.example.retrofit.data.crypto.JsonPlaceHolderCrypto
+import com.example.retrofit.data.crypto.RepositoryCrypto
 import com.example.retrofit.data.news.JsonPlaceHolderApi
 import com.example.retrofit.data.news.JsonPlaceHolderSingleton
 import com.example.retrofit.data.news.Repository
@@ -57,6 +60,18 @@ object MainModule {
         return JsonPlaceHolderWeather.api
     }
 
+
+    @Provides
+    @Singleton
+    fun provideRepositoryCrypto(api: CryptoApi): RepositoryCrypto {
+        return RepositoryCrypto(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideJsonPlaceHolderCrypto(): CryptoApi {
+        return JsonPlaceHolderCrypto.api
+    }
 
 
 }
