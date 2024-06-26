@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace 'com.rxlearn.retrofit'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.rxlearn.retrofit"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -88,5 +88,9 @@ dependencies {
 
     //picasso
     implementation 'com.squareup.picasso:picasso:2.8'
+
+    //Android Navigation Architecture
+    implementation "androidx.navigation:navigation-fragment-ktx:2.7.7"
+    implementation "androidx.navigation:navigation-ui-ktx:2.7.7"
 
 }
