@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.retrofit'
+    namespace 'com.rxlearn.retrofit'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.retrofit"
+        applicationId "com.rxlearn.retrofit"
         minSdk 24
         targetSdk 33
         versionCode 1
