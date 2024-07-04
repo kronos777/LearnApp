@@ -3,11 +3,11 @@ package com.rxlearn.retrofit.ui.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.postAtTime
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.google.gson.Gson
 import com.rxlearn.retrofit.R
@@ -15,13 +15,14 @@ import com.rxlearn.retrofit.data.product.RepositoryProduct
 import com.rxlearn.retrofit.data.user.AuthRequest
 import com.rxlearn.retrofit.data.user.User
 import com.rxlearn.retrofit.databinding.FragmentLoginBinding
+import com.rxlearn.retrofit.ui.MainViewModel
+import com.rxlearn.retrofit.ui.Utils.LoadState
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 import javax.inject.Inject
 
 
@@ -36,7 +37,7 @@ class LoginFragment : Fragment() {
     lateinit var repositoryProduct: RepositoryProduct
 
     private lateinit var binding: FragmentLoginBinding
-
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,12 +50,28 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        viewModel.loadState.observe(viewLifecycleOwner) { state ->
+            when(state) {
+                is LoadState.OnFailure ->  {
+                    binding.progressBar.visibility = View.GONE
+                }
+                is LoadState.OnSuccess ->  {
+                    binding.progressBar.visibility = View.GONE
+                }
+                is LoadState.OnLoading ->  {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+            }
+        }
+
         binding.button.setOnClickListener {
             auth()
         }
 
     }
     private fun auth() {
+        viewModel.loadState.value = LoadState.OnLoading
         CoroutineScope(Dispatchers.IO).launch {
             repositoryProduct.auth(
                 AuthRequest(
@@ -76,6 +93,8 @@ class LoginFragment : Fragment() {
 
     }
 
+
+
     private fun goMain(user: User) {
         CoroutineScope(Dispatchers.Main).launch {
             val gson = Gson()
@@ -84,7 +103,8 @@ class LoginFragment : Fragment() {
                 putString(CURRENT_USER, jsonString)
             }
             delay(5000)
-            navController.navigate(R.id.mainFragment, params)
+            viewModel.loadState.value = LoadState.OnSuccess()
+            navController.navigate(R.id.action_loginFragment_to_mainFragment, params)
         }
     }
 

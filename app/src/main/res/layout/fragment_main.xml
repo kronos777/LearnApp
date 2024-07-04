@@ -53,7 +53,15 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="@+id/recyclerView"
     app:layout_constraintTop_toTopOf="parent" />
-
+    <Button
+        android:id="@+id/show_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="show product"
+        app:layout_constraintBottom_toTopOf="@id/show_product"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
 <Button
     android:id="@+id/show_product"

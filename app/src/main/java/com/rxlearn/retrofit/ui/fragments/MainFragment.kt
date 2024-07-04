@@ -1,35 +1,34 @@
 package com.rxlearn.retrofit.ui.fragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.SearchView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.activity.addCallback
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.rxlearn.retrofit.R
-import com.rxlearn.retrofit.data.news.JsonPlaceHolderSingleton
 import com.rxlearn.retrofit.data.news.PhotoData
-import com.rxlearn.retrofit.data.news.Repository
 import com.rxlearn.retrofit.data.news.UserData
-import com.rxlearn.retrofit.data.product.Product
+import com.rxlearn.retrofit.data.post.Post
 import com.rxlearn.retrofit.data.product.RepositoryProduct
 import com.rxlearn.retrofit.data.user.User
 import com.rxlearn.retrofit.data.weather.RepositoryWeather
-import com.rxlearn.retrofit.databinding.ActivityMainBinding
 import com.rxlearn.retrofit.databinding.FragmentMainBinding
 import com.rxlearn.retrofit.ui.MainViewModel
 import com.rxlearn.retrofit.ui.PhotoDataAdapter
+import com.rxlearn.retrofit.ui.PostListAdapter
 import com.rxlearn.retrofit.ui.ProductAdapter
 import com.rxlearn.retrofit.ui.ProductViewModel
 import com.rxlearn.retrofit.ui.UserDataAdapter
@@ -71,6 +70,12 @@ class MainFragment : Fragment() {
     private lateinit var user: User
 
     private lateinit var binding: FragmentMainBinding
+
+    private val navController: NavController by lazy {
+        (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val args = requireArguments()
@@ -91,6 +96,7 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewElement()
+        listenerBackPressed()
     }
 
     private fun initViewElement() {
@@ -117,17 +123,21 @@ class MainFragment : Fragment() {
         val buttonShowUserData = binding.showUsers
         val buttonShowPhotoData = binding.showPhoto
         val buttonShowProductData = binding.showProduct
+        val buttonShowPostData = binding.showPost
         val searchBar = binding.searchBar
         buttonShowProductData.setOnClickListener {
             //showProductData()
-            //showProductsData()
-            showWeatherData()
+            showProductsData()
+            //showWeatherData()
         }
         buttonShowUserData.setOnClickListener {
             showUserData()
         }
         buttonShowPhotoData.setOnClickListener {
             showPhotoData()
+        }
+        buttonShowPostData.setOnClickListener {
+            showPostData()
         }
 
         searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
@@ -136,7 +146,6 @@ class MainFragment : Fragment() {
                 showProductsDataByName(txt)
                 return true
             }
-
             override fun onQueryTextChange(txt: String?): Boolean {
                 //  showProductsDataByName(txt)
                 return true
@@ -145,6 +154,8 @@ class MainFragment : Fragment() {
 
 
     }
+
+
 
     private fun showWeatherData() {
         progressBar.visibility = View.GONE
@@ -182,22 +193,45 @@ class MainFragment : Fragment() {
             }
         }
     }
-
-
+/*
+    private fun initRecyclerView(userDataList: List<UserData>) {
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = UserDataAdapter(userDataList)
+        }
+    }
+* */
+    private fun setupRecyclerViewPostData(postDataList: List<Post>) {
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = PostListAdapter(postDataList)
+        }
+       // setupClickListener()
+    }
     private fun showProductsData() {
         progressBar.visibility = View.GONE
         CoroutineScope(Dispatchers.IO).launch {
-            val products = repositoryProduct.getAllProducts()
-            CoroutineScope(Dispatchers.Main).launch {
+            val products = viewModel.gelAllProducts()
+           // Log.d("allProducts", products.products.toString())
+            val handler = Handler(Looper.getMainLooper())
+            handler.post {
                 onlyShowRecyclerView()
                 val adapter = ProductAdapter()
                 recyclerView.layoutManager = LinearLayoutManager(requireContext())
                 recyclerView.adapter = adapter
                 adapter.submitList(products.products)
             }
+        }/**/
+    }
+    private fun showPostData() {
+        viewModel.gelAllPost.observe(viewLifecycleOwner) { posts ->
+            //Log.d("allPostsData", posts.toString())
+            onlyShowRecyclerView()
+            setupRecyclerViewPostData(posts.posts)
         }
     }
-
     private fun showProductData() {
         progressBar.visibility = View.VISIBLE
         errorMsg.text = ""
@@ -291,8 +325,12 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun initRecyclerAllProducts(productsList: List<Product>) {
-
+    private fun listenerBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+           // navController.popBackStack(R.id.mainFragment, true)
+            //navController.navigate()
+            activity?.finishAffinity()
+        }
     }
     companion object {
         const val CURRENT_USER = "currentUser"

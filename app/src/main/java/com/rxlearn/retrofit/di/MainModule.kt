@@ -3,6 +3,9 @@ package com.rxlearn.retrofit.di
 import com.rxlearn.retrofit.data.news.JsonPlaceHolderApi
 import com.rxlearn.retrofit.data.news.JsonPlaceHolderSingleton
 import com.rxlearn.retrofit.data.news.Repository
+import com.rxlearn.retrofit.data.post.JsonPlaceHolderPost
+import com.rxlearn.retrofit.data.post.JsonPlaceHolderPostApi
+import com.rxlearn.retrofit.data.post.RepositoryPost
 import com.rxlearn.retrofit.data.product.JsonPlaceHolderProduct
 import com.rxlearn.retrofit.data.product.ProductApi
 import com.rxlearn.retrofit.data.product.RepositoryProduct
@@ -57,6 +60,16 @@ object MainModule {
         return JsonPlaceHolderWeather.api
     }
 
+    @Provides
+    @Singleton
+    fun provideRepositoryPost(api: JsonPlaceHolderPostApi): RepositoryPost {
+        return RepositoryPost(api)
+    }
 
+    @Provides
+    @Singleton
+    fun provideJsonPlaceHolderPostApi(): JsonPlaceHolderPostApi {
+        return JsonPlaceHolderPost.api
+    }
 
 }
